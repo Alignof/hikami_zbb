@@ -68,8 +68,15 @@ impl EmulateExtension for Zbb {
             OpcodeKind::Zbb(ZbbOpcode::ROR) => todo!(),
             OpcodeKind::Zbb(ZbbOpcode::SEXTB) => todo!(),
             OpcodeKind::Zbb(ZbbOpcode::SEXTH) => todo!(),
-            OpcodeKind::Zbb(ZbbOpcode::ZEXTH) => todo!(),
-            OpcodeKind::Zbb(ZbbOpcode::REV8) => todo!(),
+            OpcodeKind::Zbb(ZbbOpcode::ZEXTH) => {
+                let rs1 = context.xreg(inst.rs1.unwrap());
+                context.set_xreg(inst.rd.unwrap(), (rs1 & 0b1111_1111_1111_1111) as u64);
+            }
+            OpcodeKind::Zbb(ZbbOpcode::REV8) => {
+                let rs1 = context.xreg(inst.rs1.unwrap());
+                let byte = rs1 as u8;
+                context.set_xreg(inst.rd.unwrap(), byte.reverse_bits() as u64);
+            }
             OpcodeKind::Zbb(ZbbOpcode::ORCB) => {
                 const BYTE_SIZE: usize = 8;
                 let input = context.xreg(inst.rs1.unwrap()) as usize;
@@ -90,7 +97,10 @@ impl EmulateExtension for Zbb {
                 context.set_xreg(inst.rd.unwrap(), rs1.leading_zeros().into());
             }
             OpcodeKind::Zbb(ZbbOpcode::CLZW) => todo!(),
-            OpcodeKind::Zbb(ZbbOpcode::CTZ) => todo!(),
+            OpcodeKind::Zbb(ZbbOpcode::CTZ) => {
+                let input = context.xreg(inst.rs1.unwrap());
+                context.set_xreg(inst.rd.unwrap(), input.trailing_zeros() as u64);
+            }
             OpcodeKind::Zbb(ZbbOpcode::CTZW) => todo!(),
             _ => unreachable!(),
         }
