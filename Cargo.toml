@@ -17,4 +17,4 @@ missing_crate_level_docs = "warn"
 raki = { git = "https://github.com/Alignof/raki", branch = "feature/Zbb"}
 spin = "0.9.8"
 
-hikami_core = { path = "../hikami/hikami_core" }
+hikami_core = { git = "https://github.com/Alignof/hikami", branch = "fix/remove_binary_info_from_hikami_core"}
